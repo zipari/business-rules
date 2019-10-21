@@ -167,122 +167,127 @@ class IntegrationTests(TestCase):
                              {
                                  'numeric': [
                                      {
-                                         'input_type': 'numeric',
+                                         'name': 'equal_to',
                                          'label': 'Equal To',
-                                         'name': 'equal_to'
+                                         'input_type': 'numeric'
                                      },
                                      {
-                                         'input_type': 'numeric',
+                                         'name': 'greater_than',
                                          'label': 'Greater Than',
-                                         'name': 'greater_than'
+                                         'input_type': 'numeric'
                                      },
                                      {
-                                         'input_type': 'numeric',
+                                         'name': 'greater_than_or_equal_to',
                                          'label': 'Greater Than Or Equal To',
-                                         'name': 'greater_than_or_equal_to'
+                                         'input_type': 'numeric'
                                      },
                                      {
-                                         'input_type': 'numeric',
+                                         'name': 'less_than',
                                          'label': 'Less Than',
-                                         'name': 'less_than'
+                                         'input_type': 'numeric'
                                      },
                                      {
-                                         'input_type': 'numeric',
+                                         'name': 'less_than_or_equal_to',
                                          'label': 'Less Than Or Equal To',
-                                         'name': 'less_than_or_equal_to'
+                                         'input_type': 'numeric'
                                      },
                                      {
-                                         'input_type': 'numeric',
+                                         'name': 'not_equal_to',
                                          'label': 'Not Equal To',
-                                         'name': 'not_equal_to'
-                                     }
-                                 ],
-                                 'select': [
-                                     {
-                                         'input_type': 'select',
-                                         'label': 'Contains',
-                                         'name': 'contains'
-                                     },
-                                     {
-                                         'input_type': 'select',
-                                         'label': 'Does Not Contain',
-                                         'name': 'does_not_contain'
+                                         'input_type': 'numeric'
                                      }
                                  ],
                                  'boolean': [
                                      {
-                                         'input_type': 'none',
+                                         'name': 'is_false',
                                          'label': 'Is False',
-                                         'name': 'is_false'
+                                         'input_type': 'none'
                                      },
                                      {
-                                         'input_type': 'none',
+                                         'name': 'is_true',
                                          'label': 'Is True',
-                                         'name': 'is_true'
+                                         'input_type': 'none'
                                      }
                                  ],
                                  'string': [
                                      {
-                                         'input_type': 'text',
+                                         'name': 'contains',
                                          'label': 'Contains',
-                                         'name': 'contains'
+                                         'input_type': 'text'
                                      },
                                      {
-                                         'input_type': 'text',
+                                         'name': 'ends_with',
                                          'label': 'Ends With',
-                                         'name': 'ends_with'
+                                         'input_type': 'text'
                                      },
                                      {
-                                         'input_type': 'text',
+                                         'name': 'equal_to',
                                          'label': 'Equal To',
-                                         'name': 'equal_to'
+                                         'input_type': 'text'
                                      },
                                      {
-                                         'input_type': 'text',
+                                         'name': 'equal_to_case_insensitive',
                                          'label': 'Equal To (case insensitive)',
-                                         'name': 'equal_to_case_insensitive'
+                                         'input_type': 'text'
                                      },
                                      {
-                                         'input_type': 'text',
+                                         'name': 'matches_regex',
                                          'label': 'Matches Regex',
-                                         'name': 'matches_regex'
+                                         'input_type': 'text'
                                      },
                                      {
-                                         'input_type': 'none',
+                                         'name': 'non_empty',
                                          'label': 'Non Empty',
-                                         'name': 'non_empty'
+                                         'input_type': 'none'
                                      },
                                      {
-                                         'input_type': 'text',
+                                         'name': 'not_equal_to',
+                                         'label': 'Not Equal To',
+                                         'input_type': 'text'
+                                     },
+                                     {
+                                         'name': 'starts_with',
                                          'label': 'Starts With',
-                                         'name': 'starts_with'
+                                         'input_type': 'text'
+                                     }
+                                 ],
+                                 'select': [
+                                     {
+                                         'name': 'contains',
+                                         'label': 'Contains',
+                                         'input_type': 'select'
+                                     },
+                                     {
+                                         'name': 'does_not_contain',
+                                         'label': 'Does Not Contain',
+                                         'input_type': 'select'
                                      }
                                  ],
                                  'select_multiple': [
                                      {
-                                         'input_type': 'select_multiple',
+                                         'name': 'contains_all',
                                          'label': 'Contains All',
-                                         'name': 'contains_all'
+                                         'input_type': 'select_multiple'
                                      },
                                      {
-                                         'input_type': 'select_multiple',
+                                         'name': 'is_contained_by',
                                          'label': 'Is Contained By',
-                                         'name': 'is_contained_by'
+                                         'input_type': 'select_multiple'
                                      },
                                      {
-                                         'input_type': 'select_multiple',
+                                         'name': 'shares_at_least_one_element_with',
                                          'label': 'Shares At Least One Element With',
-                                         'name': 'shares_at_least_one_element_with'
+                                         'input_type': 'select_multiple'
                                      },
                                      {
-                                         'input_type': 'select_multiple',
+                                         'name': 'shares_exactly_one_element_with',
                                          'label': 'Shares Exactly One Element With',
-                                         'name': 'shares_exactly_one_element_with'
+                                         'input_type': 'select_multiple'
                                      },
                                      {
-                                         'input_type': 'select_multiple',
+                                         'name': 'shares_no_elements_with',
                                          'label': 'Shares No Elements With',
-                                         'name': 'shares_no_elements_with'
+                                         'input_type': 'select_multiple'
                                      }
                                  ]
                              })

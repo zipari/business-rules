@@ -83,14 +83,20 @@ class ProductActions(BaseActions):
     def __init__(self, product):
         self.product = product
 
-    @rule_action(params=[{'fieldType': FIELD_SELECT,
-                          'name': 'stock_state',
-                          'label': 'Stock state',
-                          'options': [
-                            {'label': 'Available', 'name': 'available'},
-                            {'label': 'Last items', 'name': 'last_items'},
-                            {'label': 'Out of stock', 'name': 'out_of_stock'}
-                        ]}])
+    @rule_action(
+        params=[
+            {
+                'fieldType': FIELD_SELECT,
+                'name': 'stock_state',
+                'label': 'Stock state',
+                'options': [
+                    {'label': 'Available', 'name': 'available'},
+                    {'label': 'Last items', 'name': 'last_items'},
+                    {'label': 'Out of stock', 'name': 'out_of_stock'}
+                ]
+            }
+        ]
+    )
     def change_stock_state(self, stock_state):
         self.product.stock_state = stock_state
         self.product.save()
@@ -181,48 +187,80 @@ export_rule_data(ProductVariables, ProductActions)
 that returns
 
 ```python
-{"variables": [
-    { "name": "expiration_days",
-      "label": "Days until expiration",
-      "field_type": "numeric",
-      "options": []},
-    { "name": "current_month",
-      "label": "Current Month",
-      "field_type": "string",
-      "options": []},
-    { "name": "goes_well_with",
-      "label": "Goes Well With",
-      "field_type": "select",
-      "options": ["Eggnog", "Cookies", "Beef Jerkey"]}
-                ],
-  "actions": [
-    { "name": "put_on_sale",
-      "label": "Put On Sale",
-      "params": {"sale_percentage": "numeric"}},
-    { "name": "order_more",
-      "label": "Order More",
-      "params": {"number_to_order": "numeric"}}
-  ],
-  "variable_type_operators": {
-    "numeric": [ {"name": "equal_to",
-                  "label": "Equal To",
-                  "input_type": "numeric"},
-                 {"name": "not_equal_to",
-                  "label": "Not Equal To",
-                  "input_type": "numeric"},
-                 {"name": "less_than",
-                  "label": "Less Than",
-                  "input_type": "numeric"},
-                 {"name": "greater_than",
-                  "label": "Greater Than",
-                  "input_type": "numeric"}],
-    "string": [ { "name": "equal_to",
-                  "label": "Equal To",
-                  "input_type": "text"},
-                { "name": "non_empty",
-                  "label": "Non Empty",
-                  "input_type": "none"}]
-  }
+{
+    "variables": [
+        {
+            "name": "expiration_days",
+            "label": "Days until expiration",
+            "field_type": "numeric",
+            "options": []
+        },
+        {
+            "name": "current_month",
+            "label": "Current Month",
+            "field_type": "string",
+            "options": []
+        },
+        {
+            "name": "goes_well_with",
+            "label": "Goes Well With",
+            "field_type": "select",
+            "options": ["Eggnog", "Cookies", "Beef Jerkey"]
+        }
+    ],
+    "actions": [
+        {
+            "name": "put_on_sale",
+            "label": "Put On Sale",
+            "params": {"sale_percentage": "numeric"}
+        },
+        {
+            "name": "order_more",
+            "label": "Order More",
+            "params": {"number_to_order": "numeric"}
+        }
+    ],
+    "variable_type_operators": {
+        "numeric": [
+            {
+                "name": "equal_to",
+                "label": "Equal To",
+                "input_type": "numeric"
+            },
+            {
+                "name": "not_equal_to",
+                "label": "Not Equal To",
+                "input_type": "numeric"
+            },
+            {
+                "name": "less_than",
+                "label": "Less Than",
+                "input_type": "numeric"
+            },
+            {
+                "name": "greater_than",
+                "label": "Greater Than",
+                "input_type": "numeric"
+            }
+        ],
+        "string": [
+            {
+                "name": "equal_to",
+                "label": "Equal To",
+                "input_type": "text"
+            },
+            {
+                "name": "not_equal_to",
+                "label": "Not Equal To",
+                "input_type": "text"
+            },
+            {
+                "name": "non_empty",
+                "label": "Non Empty",
+                "input_type": "none"
+            }
+        ]
+    }
 }
 ```
 
@@ -237,8 +275,7 @@ for product in Products.objects.all():
     run_all(rule_list=rules,
             defined_variables=ProductVariables(product),
             defined_actions=ProductActions(product),
-            stop_on_first_trigger=True
-           )
+            stop_on_first_trigger=True)
 ```
 
 ## API
@@ -270,6 +307,7 @@ Note: to compare floating point equality we just check that the difference is le
 `@string_rule_variable` operators:
 
 * `equal_to`
+* `not_equal_to`
 * `starts_with`
 * `ends_with`
 * `contains`
