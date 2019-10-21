@@ -48,6 +48,7 @@ class StringOperatorTests(TestCase):
 
 
 class NumericOperatorTests(TestCase):
+    EPSILON = Decimal('0.000001')
 
     def test_instantiate(self):
         err_string = "foo is not a valid numeric type"
@@ -74,12 +75,22 @@ class NumericOperatorTests(TestCase):
     def test_numeric_equal_to(self):
         self.assertTrue(NumericType(10).equal_to(10))
         self.assertTrue(NumericType(10).equal_to(10.0))
-        self.assertTrue(NumericType(10).equal_to(10.000001))
-        self.assertTrue(NumericType(10.000001).equal_to(10))
+        self.assertTrue(NumericType(10).equal_to(10 + self.EPSILON))
+        self.assertTrue(NumericType(10 + self.EPSILON).equal_to(10))
         self.assertTrue(NumericType(Decimal('10.0')).equal_to(10))
         self.assertTrue(NumericType(10).equal_to(Decimal('10.0')))
         self.assertFalse(NumericType(10).equal_to(10.00001))
         self.assertFalse(NumericType(10).equal_to(11))
+
+    def test_numeric_not_equal_to(self):
+        self.assertFalse(NumericType(10).not_equal_to(10))
+        self.assertFalse(NumericType(10).not_equal_to(10.0))
+        self.assertFalse(NumericType(10).not_equal_to(10 + self.EPSILON))
+        self.assertFalse(NumericType(10 + self.EPSILON).not_equal_to(10))
+        self.assertFalse(NumericType(Decimal('10.0')).not_equal_to(10))
+        self.assertFalse(NumericType(10).not_equal_to(Decimal('10.0')))
+        self.assertTrue(NumericType(10).not_equal_to(10.00001))
+        self.assertTrue(NumericType(10).not_equal_to(11))
 
     def test_other_value_not_numeric(self):
         error_string = "10 is not a valid numeric type"

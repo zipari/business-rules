@@ -207,6 +207,9 @@ that returns
     "numeric": [ {"name": "equal_to",
                   "label": "Equal To",
                   "input_type": "numeric"},
+                 {"name": "not_equal_to",
+                  "label": "Not Equal To",
+                  "input_type": "numeric"},
                  {"name": "less_than",
                   "label": "Less Than",
                   "input_type": "numeric"},
@@ -254,6 +257,7 @@ The available types and decorators are:
 `@numeric_rule_variable` operators:
 
 * `equal_to`
+* `not_equal_to`
 * `greater_than`
 * `less_than`
 * `greater_than_or_equal_to`
