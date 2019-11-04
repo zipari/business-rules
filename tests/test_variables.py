@@ -129,4 +129,9 @@ class RuleVariableTests(TestCase):
 
     def test_date_rule_variable(self):
 
-        pass
+        @date_rule_variable(label='My Label')
+        def date_var(): pass
+
+        self.assertTrue(getattr(date_var, 'is_rule_variable'))
+        self.assertEqual(getattr(date_var, 'field_type'), DateType)
+
