@@ -3,8 +3,11 @@ from decimal import Decimal
 import sys
 
 from business_rules.operators import (StringType,
-                                      NumericType, BooleanType, SelectType,
-                                      SelectMultipleType)
+                                      NumericType,
+                                      BooleanType,
+                                      SelectType,
+                                      SelectMultipleType,
+                                      DateType)
 from . import TestCase
 
 
@@ -207,3 +210,51 @@ class SelectMultipleOperatorTests(TestCase):
                          shares_no_elements_with([2, 3]))
         self.assertFalse(SelectMultipleType([1, 2, "a"]).
                          shares_no_elements_with([4, "A"]))
+
+
+class DateOperatorTests(TestCase):
+
+    def test_equals_to(self):
+        self.assertTrue(DateType('10-10-2019').
+                        equal_to('10-10-2019'))
+        self.assertFalse(DateType('10-10-2019').
+                         equal_to('10-11-2019'))
+
+    def test_not_equals_to(self):
+        self.assertTrue(DateType('10-10-2019').
+                        not_equal_to('10-11-2019'))
+        self.assertFalse(DateType('10-10-2019').
+                         not_equal_to('10-10-2019'))
+
+    def test_greater_than(self):
+        self.assertTrue(DateType('10-10-2019').
+                        greater_than('10-9-2019'))
+        self.assertFalse(DateType('10-10-2019').
+                         greater_than('10-11-2019'))
+
+    def test_greater_than_or_equal_to(self):
+        self.assertTrue(DateType('10-10-2019').
+                        greater_than_or_equal_to('10-10-2019'))
+        self.assertFalse(DateType('10-9-2019').
+                         greater_than_or_equal_to('10-10-2019'))
+        self.assertTrue(DateType('10-11-2019').
+                        greater_than_or_equal_to('10-10-2019'))
+        self.assertFalse(DateType('10-9-2019').
+                         greater_than_or_equal_to('10-10-2019'))
+
+    def test_less_than(self):
+        self.assertTrue(DateType('10-9-2019').
+                        less_than('10-10-2019'))
+        self.assertFalse(DateType('10-10-2019').
+                         less_than('10-9-2019'))
+
+    def test_less_than_or_equal_to(self):
+        self.assertTrue(DateType('10-10-2019').
+                        less_than_or_equal_to('10-10-2019'))
+        self.assertFalse(DateType('10-10-2019').
+                         less_than_or_equal_to('10-9-2019'))
+        self.assertTrue(DateType('10-9-2019').
+                        less_than_or_equal_to('10-10-2019'))
+        self.assertFalse(DateType('10-11-2019').
+                         less_than_or_equal_to('10-10-2019'))
+
