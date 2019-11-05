@@ -17,5 +17,8 @@ setuptools.setup(
         author_email='open-source@venmo.com',
         url='https://github.com/venmo/business-rules',
         packages=['business_rules'],
-        license='MIT'
+        license='MIT',
+        install_requires=[
+            'python-dateutil==2.8.1'
+        ],
 )

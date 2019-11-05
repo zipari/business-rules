@@ -2,9 +2,11 @@ import inspect
 import re
 from decimal import Decimal
 from functools import wraps
+import datetime
+from dateutil import parser as dateutil_parser
 
 from .fields import (FIELD_TEXT, FIELD_NUMERIC, FIELD_NO_INPUT,
-                     FIELD_SELECT, FIELD_SELECT_MULTIPLE)
+                     FIELD_SELECT, FIELD_SELECT_MULTIPLE, FIELD_DATE)
 from .six import string_types, integer_types
 from .utils import fn_name_to_pretty_label, float_to_decimal
 
@@ -244,3 +246,40 @@ class SelectMultipleType(BaseType):
     @type_operator(FIELD_SELECT_MULTIPLE)
     def shares_no_elements_with(self, other_value):
         return not self.shares_at_least_one_element_with(other_value)
+
+
+@export_type
+class DateType(BaseType):
+    name = "date"
+
+    def _assert_valid_value_and_cast(self, value):
+        
+        try:
+            return dateutil_parser.parse(value)
+        except ValueError:
+            raise AssertionError("`{}` is not a valid date type".format(value))
+
+    @type_operator(FIELD_DATE)
+    def equal_to(self, other_date):
+        return self.value == other_date
+
+    @type_operator(FIELD_DATE)
+    def not_equal_to(self, other_date):
+        return self.value != other_date
+
+    @type_operator(FIELD_DATE)
+    def greater_than(self, other_date):
+        return self.value > other_date
+
+    @type_operator(FIELD_DATE)
+    def greater_than_or_equal_to(self, other_date):
+        return self.value >= other_date
+
+    @type_operator(FIELD_DATE)
+    def less_than(self, other_date):
+        return self.value < other_date
+
+    @type_operator(FIELD_DATE)
+    def less_than_or_equal_to(self, other_date):
+        return self.value <= other_date
+
