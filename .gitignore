@@ -39,3 +39,6 @@ nosetests.xml
 
 # Pycharm
 .idea/
+
+# OSX
+.DS_Store
