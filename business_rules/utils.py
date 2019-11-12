@@ -13,8 +13,8 @@ def export_rule_data(variables, actions):
     - variable_type_operators: a dictionary of all field_types -> list of available operators
     """
     from . import operators
-    actions_data = actions.get_all_actions()
-    variables_data = variables.get_all_variables()
+    actions_data = actions.get_all_actions() if actions else None
+    variables_data = variables.get_all_variables() if variables else None
     variable_type_operators = {}
     for variable_class in inspect.getmembers(operators, lambda x: getattr(x, 'export_in_rule_data', False)):
         variable_type = variable_class[1] # getmembers returns (name, value)

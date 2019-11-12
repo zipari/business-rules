@@ -338,8 +338,14 @@ Note: to compare floating point equality we just check that the difference is le
 * `shares_exactly_one_element_with`
 * `shares_no_elements_with`
 
-### Returning data to your client
 
+## Make virtual environment and run the tests using tox
+
+From the base directory run:
+
+```bash
+$ tox -r
+```
 
 
 ## Contributing

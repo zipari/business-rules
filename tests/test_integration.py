@@ -94,200 +94,238 @@ class IntegrationTests(TestCase):
         """
         all_data = export_rule_data(SomeVariables(), SomeActions())
 
-        self.assertListEqual(all_data.get("actions"),
-                             [
-                                 {
-                                     'label': 'Some Action',
-                                     'name': 'some_action',
-                                     'params': [
-                                         {
-                                             'name': 'foo',
-                                             'label': 'Foo',
-                                             'fieldType': 'numeric'
-                                         }
-                                     ]
-                                 },
-                                 {
-                                     'label': 'woohoo',
-                                     'name': 'some_other_action',
-                                     'params': [
-                                         {
-                                             'name': 'bar',
-                                             'label': 'Bar',
-                                             'fieldType': 'text'
-                                         }
-                                     ]
-                                 },
-                                 {
-                                     'label': 'Some Select Action',
-                                     'name': 'some_select_action',
-                                     'params': [
-                                         {
-                                             'options': [
-                                                 {
-                                                     'name': 'chose_me',
-                                                     'label': 'Chose Me'
-                                                 },
-                                                 {
-                                                     'name': 'or_me',
-                                                     'label': 'Or Me'
-                                                 }
-                                             ],
-                                             'label': 'Baz',
-                                             'name': 'baz',
-                                             'fieldType': 'select'
-                                         }
-                                     ]
-                                 }
-                             ])
+        self.assertListEqual(
+            all_data.get("actions"),
+            [
+                {
+                    'label': 'Some Action',
+                    'name': 'some_action',
+                    'params': [
+                        {
+                            'name': 'foo',
+                            'label': 'Foo',
+                            'fieldType': 'numeric'
+                        }
+                    ]
+                },
+                {
+                    'label': 'woohoo',
+                    'name': 'some_other_action',
+                    'params': [
+                        {
+                            'name': 'bar',
+                            'label': 'Bar',
+                            'fieldType': 'text'
+                        }
+                    ]
+                },
+                {
+                    'label': 'Some Select Action',
+                    'name': 'some_select_action',
+                    'params': [
+                        {
+                            'options': [
+                                {
+                                    'name': 'chose_me',
+                                    'label': 'Chose Me'
+                                },
+                                {
+                                    'name': 'or_me',
+                                    'label': 'Or Me'
+                                }
+                            ],
+                            'label': 'Baz',
+                            'name': 'baz',
+                            'fieldType': 'select'
+                        }
+                    ]
+                }
+            ]
+        )
 
-        self.assertListEqual(all_data.get("variables"),
-                             [
-                                 {
-                                     'options': [],
-                                     'label': 'Foo',
-                                     'name': 'foo',
-                                     'field_type': 'string'
-                                 },
-                                 {
-                                     'options': [],
-                                     'label': 'Diez',
-                                     'name': 'ten',
-                                     'field_type': 'numeric'
-                                 },
-                                 {
-                                     'options': [],
-                                     'label': 'True Bool',
-                                     'name': 'true_bool',
-                                     'field_type': 'boolean'
-                                 }
-                             ])
+        self.assertListEqual(
+            all_data.get("variables"),
+            [
+                {
+                    'options': [],
+                    'label': 'Foo',
+                    'name': 'foo',
+                    'field_type': 'string'
+                },
+                {
+                    'options': [],
+                    'label': 'Diez',
+                    'name': 'ten',
+                    'field_type': 'numeric'
+                },
+                {
+                    'options': [],
+                    'label': 'True Bool',
+                    'name': 'true_bool',
+                    'field_type': 'boolean'
+                }
+            ]
+        )
 
-        self.assertDictEqual(all_data.get("variable_type_operators"),
-                             {
-                                 'numeric': [
-                                     {
-                                         'name': 'equal_to',
-                                         'label': 'Equal To',
-                                         'input_type': 'numeric'
-                                     },
-                                     {
-                                         'name': 'greater_than',
-                                         'label': 'Greater Than',
-                                         'input_type': 'numeric'
-                                     },
-                                     {
-                                         'name': 'greater_than_or_equal_to',
-                                         'label': 'Greater Than Or Equal To',
-                                         'input_type': 'numeric'
-                                     },
-                                     {
-                                         'name': 'less_than',
-                                         'label': 'Less Than',
-                                         'input_type': 'numeric'
-                                     },
-                                     {
-                                         'name': 'less_than_or_equal_to',
-                                         'label': 'Less Than Or Equal To',
-                                         'input_type': 'numeric'
-                                     },
-                                     {
-                                         'name': 'not_equal_to',
-                                         'label': 'Not Equal To',
-                                         'input_type': 'numeric'
-                                     }
-                                 ],
-                                 'boolean': [
-                                     {
-                                         'name': 'is_false',
-                                         'label': 'Is False',
-                                         'input_type': 'none'
-                                     },
-                                     {
-                                         'name': 'is_true',
-                                         'label': 'Is True',
-                                         'input_type': 'none'
-                                     }
-                                 ],
-                                 'string': [
-                                     {
-                                         'name': 'contains',
-                                         'label': 'Contains',
-                                         'input_type': 'text'
-                                     },
-                                     {
-                                         'name': 'ends_with',
-                                         'label': 'Ends With',
-                                         'input_type': 'text'
-                                     },
-                                     {
-                                         'name': 'equal_to',
-                                         'label': 'Equal To',
-                                         'input_type': 'text'
-                                     },
-                                     {
-                                         'name': 'equal_to_case_insensitive',
-                                         'label': 'Equal To (case insensitive)',
-                                         'input_type': 'text'
-                                     },
-                                     {
-                                         'name': 'matches_regex',
-                                         'label': 'Matches Regex',
-                                         'input_type': 'text'
-                                     },
-                                     {
-                                         'name': 'non_empty',
-                                         'label': 'Non Empty',
-                                         'input_type': 'none'
-                                     },
-                                     {
-                                         'name': 'not_equal_to',
-                                         'label': 'Not Equal To',
-                                         'input_type': 'text'
-                                     },
-                                     {
-                                         'name': 'starts_with',
-                                         'label': 'Starts With',
-                                         'input_type': 'text'
-                                     }
-                                 ],
-                                 'select': [
-                                     {
-                                         'name': 'contains',
-                                         'label': 'Contains',
-                                         'input_type': 'select'
-                                     },
-                                     {
-                                         'name': 'does_not_contain',
-                                         'label': 'Does Not Contain',
-                                         'input_type': 'select'
-                                     }
-                                 ],
-                                 'select_multiple': [
-                                     {
-                                         'name': 'contains_all',
-                                         'label': 'Contains All',
-                                         'input_type': 'select_multiple'
-                                     },
-                                     {
-                                         'name': 'is_contained_by',
-                                         'label': 'Is Contained By',
-                                         'input_type': 'select_multiple'
-                                     },
-                                     {
-                                         'name': 'shares_at_least_one_element_with',
-                                         'label': 'Shares At Least One Element With',
-                                         'input_type': 'select_multiple'
-                                     },
-                                     {
-                                         'name': 'shares_exactly_one_element_with',
-                                         'label': 'Shares Exactly One Element With',
-                                         'input_type': 'select_multiple'
-                                     },
-                                     {
-                                         'name': 'shares_no_elements_with',
-                                         'label': 'Shares No Elements With',
-                                         'input_type': 'select_multiple'
-                                     }
-                                 ]
-                             })
+        self.assertDictEqual(
+            all_data.get("variable_type_operators"),
+            {
+                'boolean': [
+                    {
+                        'name': 'is_false',
+                        'label': 'Is False',
+                        'input_type': 'none'
+                    },
+                    {
+                        'name': 'is_true',
+                        'label': 'Is True',
+                        'input_type': 'none'
+                    }
+                ],
+                'date': [
+                    {
+                        'name': 'equal_to',
+                        'label': 'Equal To',
+                        'input_type': 'date'
+                    },
+                    {
+                        'name': 'greater_than',
+                        'label': 'Greater Than',
+                        'input_type': 'date'
+                    },
+                    {
+                        'name': 'greater_than_or_equal_to',
+                        'label': 'Greater Than Or Equal To',
+                        'input_type': 'date'
+                    },
+                    {
+                        'name': 'less_than',
+                        'label': 'Less Than',
+                        'input_type': 'date'
+                    },
+                    {
+                        'name': 'less_than_or_equal_to',
+                        'label': 'Less Than Or Equal To',
+                        'input_type': 'date'
+                    },
+                    {
+                        'name': 'not_equal_to',
+                        'label': 'Not Equal To',
+                        'input_type': 'date'
+                    }
+                ],
+                'numeric': [
+                    {
+                        'name': 'equal_to',
+                        'label': 'Equal To',
+                        'input_type': 'numeric'
+                    },
+                    {
+                        'name': 'greater_than',
+                        'label': 'Greater Than',
+                        'input_type': 'numeric'
+                    },
+                    {
+                        'name': 'greater_than_or_equal_to',
+                        'label': 'Greater Than Or Equal To',
+                        'input_type': 'numeric'
+                    },
+                    {
+                        'name': 'less_than',
+                        'label': 'Less Than',
+                        'input_type': 'numeric'
+                    },
+                    {
+                        'name': 'less_than_or_equal_to',
+                        'label': 'Less Than Or Equal To',
+                        'input_type': 'numeric'
+                    },
+                    {
+                        'name': 'not_equal_to',
+                        'label': 'Not Equal To',
+                        'input_type': 'numeric'
+                    }
+                ],
+                'select_multiple': [
+                    {
+                        'name': 'contains_all',
+                        'label': 'Contains All',
+                        'input_type': 'select_multiple'
+                    },
+                    {
+                        'name': 'is_contained_by',
+                        'label': 'Is Contained By',
+                        'input_type': 'select_multiple'
+                    },
+                    {
+                        'name': 'shares_at_least_one_element_with',
+                        'label': 'Shares At Least One Element With',
+                        'input_type': 'select_multiple'
+                    },
+                    {
+                        'name': 'shares_exactly_one_element_with',
+                        'label': 'Shares Exactly One Element With',
+                        'input_type': 'select_multiple'
+                    },
+                    {
+                        'name': 'shares_no_elements_with',
+                        'label': 'Shares No Elements With',
+                        'input_type': 'select_multiple'
+                    }
+                ],
+                'select': [
+                    {
+                        'name': 'contains',
+                        'label': 'Contains',
+                        'input_type': 'select'
+                    },
+                    {
+                        'name': 'does_not_contain',
+                        'label': 'Does Not Contain',
+                        'input_type': 'select'
+                    }
+                ],
+                'string': [
+                    {
+                        'name': 'contains',
+                        'label': 'Contains',
+                        'input_type': 'text'
+                    },
+                    {
+                        'name': 'ends_with',
+                        'label': 'Ends With',
+                        'input_type': 'text'
+                    },
+                    {
+                        'name': 'equal_to',
+                        'label': 'Equal To',
+                        'input_type': 'text'
+                    },
+                    {
+                        'name': 'equal_to_case_insensitive',
+                        'label': 'Equal To (case insensitive)',
+                        'input_type': 'text'
+                    },
+                    {
+                        'name': 'matches_regex',
+                        'label': 'Matches Regex',
+                        'input_type': 'text'
+                    },
+                    {
+                        'name': 'non_empty',
+                        'label': 'Non Empty',
+                        'input_type': 'none'
+                    },
+                    {
+                        'name': 'not_equal_to',
+                        'label': 'Not Equal To',
+                        'input_type': 'text'
+                    },
+                    {
+                        'name': 'starts_with',
+                        'label': 'Starts With',
+                        'input_type': 'text'
+                    }
+                ]
+            }
+        )
