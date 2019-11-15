@@ -4,15 +4,15 @@ from . import TestCase
 
 
 class VariablesClassTests(TestCase):
-    """ Test methods on classes that inherit from BaseVariables
-    """
+    """ Test methods on classes that inherit from BaseVariables """
 
     def test_base_has_no_variables(self):
         self.assertEqual(len(BaseVariables.get_all_variables()), 0)
 
     def test_get_all_variables(self):
-        """ Returns a dictionary listing all the functions on the class that
-        have been decorated as variables, with some of the data about them.
+        """
+            Returns a dictionary listing all the functions on the class that have been decorated as variables,
+            with some of the data about them.
         """
 
         class SomeVariables(BaseVariables):

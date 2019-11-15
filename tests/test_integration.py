@@ -48,8 +48,7 @@ class SomeActions(BaseActions):
 
 
 class IntegrationTests(TestCase):
-    """ Integration test, using the library like a user would.
-    """
+    """ Integration test, using the library like a user would. """
 
     def test_true_boolean_variable(self):
         condition = {
@@ -97,9 +96,7 @@ class IntegrationTests(TestCase):
             check_condition(condition, SomeVariables())
 
     def test_export_rule_data(self):
-        """ Tests that export_rule_data has the three expected keys
-        in the right format.
-        """
+        """ Tests that export_rule_data has the three expected keys in the right format. """
         all_data = export_rule_data(SomeVariables(), SomeActions())
 
         self.assertListEqual(

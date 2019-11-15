@@ -11,9 +11,7 @@ from .utils import fn_name_to_pretty_label, validate_parameters
 
 
 class BaseVariables(object):
-    """ Classes that hold a collection of variables to use with the rules
-    engine should inherit from this.
-    """
+    """ Classes that hold a collection of variables to use with the rules engine should inherit from this. """
 
     @classmethod
     def get_all_variables(cls):
@@ -27,8 +25,7 @@ class BaseVariables(object):
 
 
 def rule_variable(field_type, label=None, options=None, params=None):
-    """ Decorator to make a function into a rule variable
-    """
+    """ Decorator to make a function into a rule variable. """
     options = options or []
     params = params or {}
 
@@ -83,4 +80,3 @@ def select_multiple_rule_variable(label=None, options=None, params=None):
 
 def date_rule_variable(label=None, params=None):
     return rule_variable(DateType, label=label, params=params)
-

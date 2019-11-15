@@ -16,8 +16,7 @@ from . import TestCase
 
 
 class RuleVariableTests(TestCase):
-    """ Tests for the base rule_variable decorator.
-    """
+    """ Tests for the base rule_variable decorator. """
 
     def test_pretty_label(self):
         self.assertEqual(
@@ -33,9 +32,7 @@ class RuleVariableTests(TestCase):
             def some_test_function(self): pass
 
     def test_rule_variable_decorator_internals(self):
-        """ Make sure that the expected attributes are attached to a function
-        by the variable decorators.
-        """
+        """ Make sure that the expected attributes are attached to a function by the variable decorators. """
 
         def some_test_function(self): pass
 
@@ -128,10 +125,8 @@ class RuleVariableTests(TestCase):
         self.assertEqual(getattr(select_multiple_var, 'options'), options)
 
     def test_date_rule_variable(self):
-
         @date_rule_variable(label='My Label')
         def date_var(): pass
 
         self.assertTrue(getattr(date_var, 'is_rule_variable'))
         self.assertEqual(getattr(date_var, 'field_type'), DateType)
-

@@ -1,6 +1,5 @@
-from decimal import Decimal
-
 import sys
+from decimal import Decimal
 
 from business_rules.operators import (StringType,
                                       NumericType,
@@ -253,5 +252,3 @@ class DateOperatorTests(TestCase):
                          less_than_or_equal_to('10-9-2019'))
         self.assertTrue(DateType('10-9-2019').
                         less_than_or_equal_to('10-10-2019'))
-        
-
