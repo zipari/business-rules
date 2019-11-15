@@ -24,7 +24,7 @@ a particular sequence of events.
 
 Variables represent values in your system, usually the value of some particular object.  You create rules by setting threshold conditions such that when a variable is computed that triggers the condition some action is taken.
 
-You define all the available variables for a certain kind of object in your code, and then later dynamically set the conditions and thresholds for those.
+You define all the available variables for a certain kind of object in your code, and then dynamically set the conditions and thresholds for those.
 
 For example:
 
@@ -37,6 +37,15 @@ class ProductVariables(BaseVariables):
     @numeric_rule_variable
     def current_inventory(self):
         return self.product.current_inventory
+
+    @boolean_rule_variable(params={'limit': FIELD_NUMERIC})
+    def current_inventory_over_limit(self, limit):
+        """
+        This docstring will become a tooltip! But just the first line!
+        :param limit: integer; inventory limit
+        :return: boolean;
+        """
+        return self.product.current_inventory > limit
 
     @numeric_rule_variable(label='Days until expiration')
     def expiration_days(self)
@@ -66,6 +75,9 @@ class ProductActions(BaseActions):
 
     @rule_action(params={"sale_percentage": FIELD_NUMERIC})
     def put_on_sale(self, sale_percentage):
+        """
+        Actions too can have docstrings!
+        """
         self.product.price = (1.0 - sale_percentage) * self.product.price
         self.product.save()
 
@@ -193,31 +205,49 @@ that returns
             "name": "expiration_days",
             "label": "Days until expiration",
             "field_type": "numeric",
-            "options": []
+            "options": [],
+            "params": {},
+            "tooltip": ""
+        },
+        {
+            "name": "current_inventory_over_limit",
+            "label": "",
+            "field_type": "boolean",
+            "options": [],
+            "params": {
+                "limit": "numeric"
+            },
+            "tooltip": "This docstring will become a tooltip! But just the first line!"
         },
         {
             "name": "current_month",
             "label": "Current Month",
             "field_type": "string",
-            "options": []
+            "options": [],
+            "params": {},
+            "tooltip": ""
         },
         {
             "name": "goes_well_with",
             "label": "Goes Well With",
             "field_type": "select",
-            "options": ["Eggnog", "Cookies", "Beef Jerkey"]
+            "options": ["Eggnog", "Cookies", "Beef Jerkey"],
+            "params": {},
+            "tooltip": ""
         }
     ],
     "actions": [
         {
             "name": "put_on_sale",
             "label": "Put On Sale",
-            "params": {"sale_percentage": "numeric"}
+            "params": {"sale_percentage": "numeric"},
+            "tooltip": ""
         },
         {
             "name": "order_more",
             "label": "Order More",
-            "params": {"number_to_order": "numeric"}
+            "params": {"number_to_order": "numeric"},
+            "tooltip": ""
         }
     ],
     "variable_type_operators": {
@@ -337,6 +367,17 @@ Note: to compare floating point equality we just check that the difference is le
 * `shares_at_least_one_element_with`
 * `shares_exactly_one_element_with`
 * `shares_no_elements_with`
+
+**date** - a date value.
+
+`@date_rule_variable` operators:
+
+* `equal_to`
+* `not_equal_to`
+* `greater_than`
+* `less_than`
+* `greater_than_or_equal_to`
+* `less_than_or_equal_to`
 
 
 ## Make virtual environment and run the tests using tox
