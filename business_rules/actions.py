@@ -1,6 +1,6 @@
 import inspect
 
-from .utils import fn_name_to_pretty_label, validate_parameters
+from .utils import fn_name_to_pretty_label, validate_parameters, docstring_to_tooltip
 
 
 class BaseActions(object):
@@ -11,7 +11,8 @@ class BaseActions(object):
         methods = inspect.getmembers(cls)
         return [{'name': m[0],
                  'label': m[1].label,
-                 'params': m[1].params
+                 'params': m[1].params,
+                 'tooltip': docstring_to_tooltip(m[1].__doc__)
                  } for m in methods if getattr(m[1], 'is_rule_action', False)]
 
 

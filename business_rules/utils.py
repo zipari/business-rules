@@ -69,3 +69,15 @@ def validate_parameters(func, params, element):
                                                                                 func.__name__,
                                                                                 param_name)
                 )
+
+
+def docstring_to_tooltip(docstring):
+    """
+    Returns tooltip friendly version of the docstring
+    :param docstring: a docstring
+    :return: the docstring content
+    """
+    docstring = docstring or ''
+    if not docstring.strip().splitlines():
+        return ''
+    return docstring.strip().splitlines()[0]

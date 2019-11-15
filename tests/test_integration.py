@@ -14,6 +14,12 @@ class SomeVariables(BaseVariables):
 
     @string_rule_variable(params={"foo": FIELD_TEXT, "bar": FIELD_TEXT})
     def foo_bar(self, foo="Foo", bar="Bar"):
+        """
+        Foobar
+        :param foo:
+        :param bar:
+        :return: foobar
+        """
         return "{}{}".format(foo, bar)
 
     @numeric_rule_variable(label="Diez")
@@ -35,7 +41,13 @@ class SomeActions(BaseActions):
     def some_action(self, foo): pass
 
     @rule_action(label="woohoo", params={"bar": FIELD_TEXT})
-    def some_other_action(self, bar): pass
+    def some_other_action(self, bar):
+        """
+        A nice docstring for you!
+        :param bar:
+        :return:
+        """
+        pass
 
     @rule_action(params=[{'fieldType': FIELD_SELECT,
                           'name': 'baz',
@@ -111,7 +123,8 @@ class IntegrationTests(TestCase):
                             'name': 'foo',
                             'fieldType': 'numeric'
                         }
-                    ]
+                    ],
+                    'tooltip': ''
                 },
                 {
                     'name': 'some_other_action',
@@ -122,7 +135,8 @@ class IntegrationTests(TestCase):
                             'name': 'bar',
                             'fieldType': 'text'
                         }
-                    ]
+                    ],
+                    'tooltip': 'A nice docstring for you!'
                 },
                 {
                     'name': 'some_select_action',
@@ -143,7 +157,8 @@ class IntegrationTests(TestCase):
                                 }
                             ]
                         }
-                    ]
+                    ],
+                    'tooltip': ''
                 }
             ]
         )
@@ -160,7 +175,8 @@ class IntegrationTests(TestCase):
                     ],
                     'params': {
 
-                    }
+                    },
+                    'tooltip': ''
                 },
                 {
                     'name': 'foo_bar',
@@ -172,7 +188,8 @@ class IntegrationTests(TestCase):
                     'params': {
                         'foo': 'text',
                         'bar': 'text'
-                    }
+                    },
+                    'tooltip': 'Foobar'
                 },
                 {
                     'name': 'ten',
@@ -183,7 +200,8 @@ class IntegrationTests(TestCase):
                     ],
                     'params': {
                         'foo_bar': 'numeric'
-                    }
+                    },
+                    'tooltip': ''
                 },
                 {
                     'name': 'true_bool',
@@ -194,7 +212,8 @@ class IntegrationTests(TestCase):
                     ],
                     'params': {
 
-                    }
+                    },
+                    'tooltip': ''
                 }
             ]
         )

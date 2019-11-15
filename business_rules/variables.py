@@ -7,7 +7,7 @@ from .operators import (BaseType,
                         SelectType,
                         SelectMultipleType,
                         DateType)
-from .utils import fn_name_to_pretty_label, validate_parameters
+from .utils import fn_name_to_pretty_label, validate_parameters, docstring_to_tooltip
 
 
 class BaseVariables(object):
@@ -21,6 +21,7 @@ class BaseVariables(object):
                  'field_type': m[1].field_type.name,
                  'options': m[1].options,
                  'params': m[1].params,
+                 'tooltip': docstring_to_tooltip(m[1].__doc__)
                  } for m in methods if getattr(m[1], 'is_rule_variable', False)]
 
 
