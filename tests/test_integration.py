@@ -12,9 +12,17 @@ class SomeVariables(BaseVariables):
     def foo(self):
         return "foo"
 
+    @string_rule_variable(params={"foo": FIELD_TEXT, "bar": FIELD_TEXT})
+    def foo_bar(self, foo="Foo", bar="Bar"):
+        return "{}{}".format(foo, bar)
+
     @numeric_rule_variable(label="Diez")
     def ten(self):
         return 10
+
+    @numeric_rule_variable(label="FooBar", params={"foo_bar": FIELD_NUMERIC})
+    def ten(self, foo_bar=123):
+        return foo_bar
 
     @boolean_rule_variable()
     def true_bool(self):
@@ -98,45 +106,45 @@ class IntegrationTests(TestCase):
             all_data.get("actions"),
             [
                 {
-                    'label': 'Some Action',
                     'name': 'some_action',
+                    'label': 'Some Action',
                     'params': [
                         {
-                            'name': 'foo',
                             'label': 'Foo',
+                            'name': 'foo',
                             'fieldType': 'numeric'
                         }
                     ]
                 },
                 {
-                    'label': 'woohoo',
                     'name': 'some_other_action',
+                    'label': 'woohoo',
                     'params': [
                         {
-                            'name': 'bar',
                             'label': 'Bar',
+                            'name': 'bar',
                             'fieldType': 'text'
                         }
                     ]
                 },
                 {
-                    'label': 'Some Select Action',
                     'name': 'some_select_action',
+                    'label': 'Some Select Action',
                     'params': [
                         {
+                            'fieldType': 'select',
+                            'name': 'baz',
+                            'label': 'Baz',
                             'options': [
                                 {
-                                    'name': 'chose_me',
-                                    'label': 'Chose Me'
+                                    'label': 'Chose Me',
+                                    'name': 'chose_me'
                                 },
                                 {
-                                    'name': 'or_me',
-                                    'label': 'Or Me'
+                                    'label': 'Or Me',
+                                    'name': 'or_me'
                                 }
-                            ],
-                            'label': 'Baz',
-                            'name': 'baz',
-                            'fieldType': 'select'
+                            ]
                         }
                     ]
                 }
@@ -147,22 +155,49 @@ class IntegrationTests(TestCase):
             all_data.get("variables"),
             [
                 {
-                    'options': [],
-                    'label': 'Foo',
                     'name': 'foo',
-                    'field_type': 'string'
+                    'label': 'Foo',
+                    'field_type': 'string',
+                    'options': [
+
+                    ],
+                    'params': {
+
+                    }
                 },
                 {
-                    'options': [],
-                    'label': 'Diez',
+                    'name': 'foo_bar',
+                    'label': 'Foo Bar',
+                    'field_type': 'string',
+                    'options': [
+
+                    ],
+                    'params': {
+                        'foo': 'text',
+                        'bar': 'text'
+                    }
+                },
+                {
                     'name': 'ten',
-                    'field_type': 'numeric'
+                    'label': 'FooBar',
+                    'field_type': 'numeric',
+                    'options': [
+
+                    ],
+                    'params': {
+                        'foo_bar': 'numeric'
+                    }
                 },
                 {
-                    'options': [],
-                    'label': 'True Bool',
                     'name': 'true_bool',
-                    'field_type': 'boolean'
+                    'label': 'True Bool',
+                    'field_type': 'boolean',
+                    'options': [
+
+                    ],
+                    'params': {
+
+                    }
                 }
             ]
         )

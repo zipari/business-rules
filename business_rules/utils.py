@@ -1,6 +1,9 @@
 from decimal import Decimal, Inexact, Context
 import inspect
 
+from business_rules import fields
+
+
 def fn_name_to_pretty_label(name):
     return ' '.join([w.title() for w in name.split('_')])
 
@@ -40,3 +43,28 @@ def float_to_decimal(f):
         result = ctx.divide(numerator, denominator)
     return result
 
+
+def validate_parameters(func, params, element):
+    """
+        Verifies that the parameters specified are actual parameters for the function `func`,
+        and that the field types are FIELD_* types in fields.
+    """
+    if params is not None:
+        # Verify field name is valid
+        valid_fields = [getattr(fields, f) for f in dir(fields) if f.startswith("FIELD_")]
+        for param in params:
+            param_name, field_type = param['name'], param['fieldType']
+            if param_name not in func.__code__.co_varnames:
+                raise AssertionError(
+                    "Unknown parameter name {} specified for {} {}".format(param_name,
+                                                                           element,
+                                                                           func.__name__)
+                )
+
+            if field_type not in valid_fields:
+                raise AssertionError(
+                    "Unknown field type {} specified for {} {} param {}".format(field_type,
+                                                                                element,
+                                                                                func.__name__,
+                                                                                param_name)
+                )
