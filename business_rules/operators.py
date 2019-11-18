@@ -2,11 +2,10 @@ import inspect
 import re
 from decimal import Decimal
 from functools import wraps
-import datetime
+
 from dateutil import parser as dateutil_parser
 
-from .fields import (FIELD_TEXT, FIELD_NUMERIC, FIELD_NO_INPUT,
-                     FIELD_SELECT, FIELD_SELECT_MULTIPLE, FIELD_DATE)
+from .fields import (FIELD_TEXT, FIELD_NUMERIC, FIELD_NO_INPUT, FIELD_SELECT, FIELD_SELECT_MULTIPLE, FIELD_DATE)
 from .six import string_types, integer_types
 from .utils import fn_name_to_pretty_label, float_to_decimal
 
@@ -35,17 +34,16 @@ def export_type(cls):
 
 def type_operator(input_type, label=None,
                   assert_type_for_arguments=True):
-    """ Decorator to make a function into a type operator.
+    """
+        Decorator to make a function into a type operator.
 
-    - assert_type_for_arguments - if True this patches the operator function
-      so that arguments passed to it will have _assert_valid_value_and_cast
-      called on them to make type errors explicit.
+        - assert_type_for_arguments - if True this patches the operator function, so that arguments passed to it will
+          have _assert_valid_value_and_cast called on them to make type errors explicit.
     """
 
     def wrapper(func):
         func.is_operator = True
-        func.label = label \
-                     or fn_name_to_pretty_label(func.__name__)
+        func.label = label or fn_name_to_pretty_label(func.__name__)
         func.input_type = input_type
 
         @wraps(func)
@@ -68,8 +66,7 @@ class StringType(BaseType):
     def _assert_valid_value_and_cast(self, value):
         value = value or ""
         if not isinstance(value, string_types):
-            raise AssertionError("{0} is not a valid string type.".
-                                 format(value))
+            raise AssertionError("{0} is not a valid string type.".format(value))
         return value
 
     @type_operator(FIELD_TEXT)
@@ -121,8 +118,7 @@ class NumericType(BaseType):
         if isinstance(value, Decimal):
             return value
         else:
-            raise AssertionError("{0} is not a valid numeric type.".
-                                 format(value))
+            raise AssertionError("{0} is not a valid numeric type.".format(value))
 
     @type_operator(FIELD_NUMERIC)
     def equal_to(self, other_numeric):
@@ -155,8 +151,7 @@ class BooleanType(BaseType):
 
     def _assert_valid_value_and_cast(self, value):
         if type(value) != bool:
-            raise AssertionError("{0} is not a valid boolean type".
-                                 format(value))
+            raise AssertionError("{0} is not a valid boolean type".format(value))
         return value
 
     @type_operator(FIELD_NO_INPUT)
@@ -174,14 +169,12 @@ class SelectType(BaseType):
 
     def _assert_valid_value_and_cast(self, value):
         if not hasattr(value, '__iter__'):
-            raise AssertionError("{0} is not a valid select type".
-                                 format(value))
+            raise AssertionError("{0} is not a valid select type".format(value))
         return value
 
     @staticmethod
     def _case_insensitive_equal_to(value_from_list, other_value):
-        if isinstance(value_from_list, string_types) and \
-                isinstance(other_value, string_types):
+        if isinstance(value_from_list, string_types) and isinstance(other_value, string_types):
             return value_from_list.lower() == other_value.lower()
         else:
             return value_from_list == other_value
@@ -207,8 +200,7 @@ class SelectMultipleType(BaseType):
 
     def _assert_valid_value_and_cast(self, value):
         if not hasattr(value, '__iter__'):
-            raise AssertionError("{0} is not a valid select multiple type".
-                                 format(value))
+            raise AssertionError("{0} is not a valid select multiple type".format(value))
         return value
 
     @type_operator(FIELD_SELECT_MULTIPLE)
@@ -253,7 +245,7 @@ class DateType(BaseType):
     name = "date"
 
     def _assert_valid_value_and_cast(self, value):
-        
+
         try:
             return dateutil_parser.parse(value)
         except ValueError:
@@ -282,4 +274,3 @@ class DateType(BaseType):
     @type_operator(FIELD_DATE)
     def less_than_or_equal_to(self, other_date):
         return self.value <= other_date
-

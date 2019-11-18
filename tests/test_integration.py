@@ -12,9 +12,23 @@ class SomeVariables(BaseVariables):
     def foo(self):
         return "foo"
 
+    @string_rule_variable(params={"foo": FIELD_TEXT, "bar": FIELD_TEXT})
+    def foo_bar(self, foo="Foo", bar="Bar"):
+        """
+        Foobar
+        :param foo:
+        :param bar:
+        :return: foobar
+        """
+        return "{}{}".format(foo, bar)
+
     @numeric_rule_variable(label="Diez")
     def ten(self):
         return 10
+
+    @numeric_rule_variable(label="FooBar", params={"foo_bar": FIELD_NUMERIC})
+    def ten(self, foo_bar=123):
+        return foo_bar
 
     @boolean_rule_variable()
     def true_bool(self):
@@ -27,7 +41,13 @@ class SomeActions(BaseActions):
     def some_action(self, foo): pass
 
     @rule_action(label="woohoo", params={"bar": FIELD_TEXT})
-    def some_other_action(self, bar): pass
+    def some_other_action(self, bar):
+        """
+        A nice docstring for you!
+        :param bar:
+        :return:
+        """
+        pass
 
     @rule_action(params=[{'fieldType': FIELD_SELECT,
                           'name': 'baz',
@@ -40,8 +60,7 @@ class SomeActions(BaseActions):
 
 
 class IntegrationTests(TestCase):
-    """ Integration test, using the library like a user would.
-    """
+    """ Integration test, using the library like a user would. """
 
     def test_true_boolean_variable(self):
         condition = {
@@ -89,56 +108,57 @@ class IntegrationTests(TestCase):
             check_condition(condition, SomeVariables())
 
     def test_export_rule_data(self):
-        """ Tests that export_rule_data has the three expected keys
-        in the right format.
-        """
+        """ Tests that export_rule_data has the three expected keys in the right format. """
         all_data = export_rule_data(SomeVariables(), SomeActions())
 
         self.assertListEqual(
             all_data.get("actions"),
             [
                 {
-                    'label': 'Some Action',
                     'name': 'some_action',
+                    'label': 'Some Action',
                     'params': [
                         {
-                            'name': 'foo',
                             'label': 'Foo',
+                            'name': 'foo',
                             'fieldType': 'numeric'
                         }
-                    ]
+                    ],
+                    'tooltip': ''
                 },
                 {
-                    'label': 'woohoo',
                     'name': 'some_other_action',
+                    'label': 'woohoo',
                     'params': [
                         {
-                            'name': 'bar',
                             'label': 'Bar',
+                            'name': 'bar',
                             'fieldType': 'text'
                         }
-                    ]
+                    ],
+                    'tooltip': 'A nice docstring for you!'
                 },
                 {
-                    'label': 'Some Select Action',
                     'name': 'some_select_action',
+                    'label': 'Some Select Action',
                     'params': [
                         {
+                            'fieldType': 'select',
+                            'name': 'baz',
+                            'label': 'Baz',
                             'options': [
                                 {
-                                    'name': 'chose_me',
-                                    'label': 'Chose Me'
+                                    'label': 'Chose Me',
+                                    'name': 'chose_me'
                                 },
                                 {
-                                    'name': 'or_me',
-                                    'label': 'Or Me'
+                                    'label': 'Or Me',
+                                    'name': 'or_me'
                                 }
-                            ],
-                            'label': 'Baz',
-                            'name': 'baz',
-                            'fieldType': 'select'
+                            ]
                         }
-                    ]
+                    ],
+                    'tooltip': ''
                 }
             ]
         )
@@ -147,22 +167,53 @@ class IntegrationTests(TestCase):
             all_data.get("variables"),
             [
                 {
-                    'options': [],
-                    'label': 'Foo',
                     'name': 'foo',
-                    'field_type': 'string'
+                    'label': 'Foo',
+                    'field_type': 'string',
+                    'options': [
+
+                    ],
+                    'params': {
+
+                    },
+                    'tooltip': ''
                 },
                 {
-                    'options': [],
-                    'label': 'Diez',
+                    'name': 'foo_bar',
+                    'label': 'Foo Bar',
+                    'field_type': 'string',
+                    'options': [
+
+                    ],
+                    'params': {
+                        'foo': 'text',
+                        'bar': 'text'
+                    },
+                    'tooltip': 'Foobar'
+                },
+                {
                     'name': 'ten',
-                    'field_type': 'numeric'
+                    'label': 'FooBar',
+                    'field_type': 'numeric',
+                    'options': [
+
+                    ],
+                    'params': {
+                        'foo_bar': 'numeric'
+                    },
+                    'tooltip': ''
                 },
                 {
-                    'options': [],
-                    'label': 'True Bool',
                     'name': 'true_bool',
-                    'field_type': 'boolean'
+                    'label': 'True Bool',
+                    'field_type': 'boolean',
+                    'options': [
+
+                    ],
+                    'params': {
+
+                    },
+                    'tooltip': ''
                 }
             ]
         )
