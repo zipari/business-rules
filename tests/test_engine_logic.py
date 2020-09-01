@@ -195,3 +195,18 @@ class EngineTests(TestCase):
         err_string = "Action fakeone is not defined in class BaseActions"
         with self.assertRaisesRegexp(AssertionError, err_string):
             engine.do_actions(actions, BaseActions())
+
+    def test_do_actions_with_returned_values(self):
+        actions = [{'name': 'action1'},
+                   {'name': 'action2', 'params': {'param1': 'foo', 'param2': 10}},
+                   {'name': 'action3', 'params': {'param1': 'baz'}}]
+        defined_actions = BaseActions()
+        defined_actions.action1 = MagicMock(return_value={'param3': 'bar'})
+        defined_actions.action2 = MagicMock()
+        defined_actions.action3 = MagicMock()
+
+        engine.do_actions(actions, defined_actions)
+
+        defined_actions.action1.assert_called_once_with()
+        defined_actions.action2.assert_called_once_with(param1='foo', param2=10, param3='bar')
+        defined_actions.action3.assert_called_once_with(param1='baz')

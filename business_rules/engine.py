@@ -99,6 +99,7 @@ def _do_operator_comparison(operator_type, operator_name, comparison_value):
 
 
 def do_actions(actions, defined_actions):
+    returned_values = None
     for action in actions:
         method_name = action['name']
 
@@ -107,5 +108,7 @@ def do_actions(actions, defined_actions):
                                  .format(method_name, defined_actions.__class__.__name__))
 
         params = action.get('params') or {}
+        if returned_values:
+            params = {**params, **returned_values}
         method = getattr(defined_actions, method_name, fallback)
-        method(**params)
+        returned_values = method(**params)
