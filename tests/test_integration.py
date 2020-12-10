@@ -77,8 +77,9 @@ class IntegrationTests(TestCase):
             'operator': 'is_false',
             'value': ''
         }
-        res = check_condition(condition, SomeVariables())
-        self.assertFalse(res)
+        result, overrides = check_condition(condition, SomeVariables())
+        self.assertFalse(result)
+        self.assertDictEqual(overrides, {})
 
     def test_check_true_condition_happy_path(self):
         condition = {'name': 'foo',
@@ -90,7 +91,9 @@ class IntegrationTests(TestCase):
         condition = {'name': 'foo',
                      'operator': 'contains',
                      'value': 'm'}
-        self.assertFalse(check_condition(condition, SomeVariables()))
+        result, overrides = check_condition(condition, SomeVariables())
+        self.assertFalse(result)
+        self.assertDictEqual(overrides, {})
 
     def test_check_incorrect_method_name(self):
         condition = {'name': 'food',

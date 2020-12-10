@@ -6,13 +6,11 @@ from business_rules.operators import StringType
 from business_rules.variables import BaseVariables
 from . import TestCase
 
+T_NO_OVERRIDES = (True, {})
+F_NO_OVERRIDES = (False, {})
+
 
 class EngineTests(TestCase):
-
-    ###
-    ### Run
-    ###
-
     @patch.object(engine, 'run')
     def test_run_all_some_rule_triggered(self, *args):
         """
@@ -52,7 +50,7 @@ class EngineTests(TestCase):
         self.assertEqual(engine.run.call_count, 1)
         engine.run.assert_called_once_with(rule1, variables, actions)
 
-    @patch.object(engine, 'check_conditions_recursively', return_value=True)
+    @patch.object(engine, 'check_conditions_recursively', return_value=T_NO_OVERRIDES)
     @patch.object(engine, 'do_actions')
     def test_run_that_triggers_rule(self, *args):
         rule = {'conditions': 'blah', 'actions': 'blah2'}
@@ -63,9 +61,9 @@ class EngineTests(TestCase):
         self.assertEqual(result, True)
         engine.check_conditions_recursively.assert_called_once_with(
             rule['conditions'], variables)
-        engine.do_actions.assert_called_once_with(rule['actions'], actions)
+        engine.do_actions.assert_called_once_with(rule['actions'], actions, override_params={})
 
-    @patch.object(engine, 'check_conditions_recursively', return_value=False)
+    @patch.object(engine, 'check_conditions_recursively', return_value=F_NO_OVERRIDES)
     @patch.object(engine, 'do_actions')
     def test_run_that_doesnt_trigger_rule(self, *args):
         rule = {'conditions': 'blah', 'actions': 'blah2'}
@@ -78,53 +76,53 @@ class EngineTests(TestCase):
             rule['conditions'], variables)
         self.assertEqual(engine.do_actions.call_count, 0)
 
-    @patch.object(engine, 'check_condition', return_value=True)
+    @patch.object(engine, 'check_condition', return_value=T_NO_OVERRIDES)
     def test_check_all_conditions_with_all_true(self, *args):
         conditions = {'all': [{'thing1': ''}, {'thing2': ''}]}
         variables = BaseVariables()
 
         result = engine.check_conditions_recursively(conditions, variables)
-        self.assertEqual(result, True)
+        self.assertEqual(result, T_NO_OVERRIDES)
         # assert call count and most recent call are as expected
         self.assertEqual(engine.check_condition.call_count, 2)
-        engine.check_condition.assert_called_with({'thing2': ''}, variables)
+        engine.check_condition.assert_called_with({'thing2': ''}, variables, override_params={})
 
     ###
     ### Check conditions
     ###
 
-    @patch.object(engine, 'check_condition', return_value=False)
+    @patch.object(engine, 'check_condition', return_value=F_NO_OVERRIDES)
     def test_check_all_conditions_with_all_false(self, *args):
         conditions = {'all': [{'thing1': ''}, {'thing2': ''}]}
         variables = BaseVariables()
 
         result = engine.check_conditions_recursively(conditions, variables)
-        self.assertEqual(result, False)
-        engine.check_condition.assert_called_once_with({'thing1': ''}, variables)
+        self.assertEqual(result, F_NO_OVERRIDES)
+        engine.check_condition.assert_called_once_with({'thing1': ''}, variables, override_params={})
 
     def test_check_all_condition_with_no_items_fails(self):
         with self.assertRaises(AssertionError):
             engine.check_conditions_recursively({'all': []}, BaseVariables())
 
-    @patch.object(engine, 'check_condition', return_value=True)
+    @patch.object(engine, 'check_condition', return_value=T_NO_OVERRIDES)
     def test_check_any_conditions_with_all_true(self, *args):
         conditions = {'any': [{'thing1': ''}, {'thing2': ''}]}
         variables = BaseVariables()
 
         result = engine.check_conditions_recursively(conditions, variables)
-        self.assertEqual(result, True)
-        engine.check_condition.assert_called_once_with({'thing1': ''}, variables)
+        self.assertEqual(result, T_NO_OVERRIDES)
+        engine.check_condition.assert_called_once_with({'thing1': ''}, variables, override_params={})
 
-    @patch.object(engine, 'check_condition', return_value=False)
+    @patch.object(engine, 'check_condition', return_value=F_NO_OVERRIDES)
     def test_check_any_conditions_with_all_false(self, *args):
         conditions = {'any': [{'thing1': ''}, {'thing2': ''}]}
         variables = BaseVariables()
 
         result = engine.check_conditions_recursively(conditions, variables)
-        self.assertEqual(result, False)
+        self.assertEqual(result, F_NO_OVERRIDES)
         # assert call count and most recent call are as expected
         self.assertEqual(engine.check_condition.call_count, 2)
-        engine.check_condition.assert_called_with({'thing2': ''}, variables)
+        engine.check_condition.assert_called_with({'thing2': ''}, variables, override_params={})
 
     def test_check_any_condition_with_no_items_fails(self):
         with self.assertRaises(AssertionError):
@@ -151,16 +149,17 @@ class EngineTests(TestCase):
         }
         bv = BaseVariables()
 
-        def side_effect(condition, _):
-            return condition['name'] in [2, 3]
+        def side_effect(condition, _, **kwargs):
+            condition_check = condition['name'] in [2, 3]
+            return condition_check, {}
 
         engine.check_condition.side_effect = side_effect
 
         engine.check_conditions_recursively(conditions, bv)
         self.assertEqual(engine.check_condition.call_count, 3)
-        engine.check_condition.assert_any_call({'name': 1}, bv)
-        engine.check_condition.assert_any_call({'name': 2}, bv)
-        engine.check_condition.assert_any_call({'name': 3}, bv)
+        engine.check_condition.assert_any_call({'name': 1}, bv, override_params={})
+        engine.check_condition.assert_any_call({'name': 2}, bv, override_params={})
+        engine.check_condition.assert_any_call({'name': 3}, bv, override_params={})
 
     ###
     ### Operator comparisons

@@ -26,7 +26,7 @@ def run(rule, defined_variables, defined_actions):
     conditions, actions = rule['conditions'], rule['actions']
     rule_triggered, override_params = check_conditions_recursively(conditions, defined_variables)
     if rule_triggered:
-        do_actions(actions, defined_actions, override_params)
+        do_actions(actions, defined_actions, override_params=override_params)
         return True
     return False
 
