@@ -46,7 +46,7 @@ def check_conditions_recursively(conditions, defined_variables, override_params=
     override_params = override_params or {}
     keys = list(conditions.keys())
     if keys == ['all']:
-        assert len(conditions['all']) >= 1
+        assert len(conditions['all']) >= 1, "'all' clause of a BR has to have at least one variable!"
         for condition in conditions['all']:
             override_params_copy = copy.deepcopy(override_params)
             conditions_met, params_update = check_conditions_recursively(
@@ -58,7 +58,7 @@ def check_conditions_recursively(conditions, defined_variables, override_params=
         return True, override_params
 
     elif keys == ['any']:
-        assert len(conditions['any']) >= 1
+        assert len(conditions['any']) >= 1, "'any' clause of a BR has to have at least one variable!"
         for condition in conditions['any']:
             override_params_copy = copy.deepcopy(override_params)
             conditions_met, params_update = check_conditions_recursively(
@@ -71,7 +71,7 @@ def check_conditions_recursively(conditions, defined_variables, override_params=
 
     else:
         # help prevent errors - any and all can only be in the condition dict if they're the only item
-        assert not ('any' in keys or 'all' in keys)
+        assert not ('any' in keys or 'all' in keys), "Error structuring BR conditions!"
         return check_condition(
             conditions, defined_variables, override_params=override_params
         )
@@ -127,6 +127,8 @@ def _get_variable_value_and_actions_params(defined_variables, name, params):
         else:
             val, override_params = method_result, None
         override_params = override_params or {}
+        # make sure override_params is a dictionary
+        assert isinstance(override_params, dict), 'BR variable returned override has to be an instance of dict()!'
 
         return method.field_type(val), override_params
 
