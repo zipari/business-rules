@@ -16,12 +16,21 @@ def run_all(rule_list,
 
 
 def run(rule, defined_variables, defined_actions):
-    conditions, actions = rule['conditions'], rule['actions']
+    conditions, actions, else_ = rule['conditions'], rule['actions'], (rule.get('else') or {})
     rule_triggered = check_conditions_recursively(conditions, defined_variables)
     if rule_triggered:
         do_actions(actions, defined_actions)
         return True
+    elif else_:
+        verify_else(else_)
+        return run(else_, defined_variables, defined_actions)
     return False
+
+
+def verify_else(else_):
+    if 'actions' not in else_:
+        raise AttributeError(
+            '`else` for condition does not contain an `action`')
 
 
 def check_conditions_recursively(conditions, defined_variables):
