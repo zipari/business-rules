@@ -1,3 +1,5 @@
+import copy
+
 from .fields import FIELD_NO_INPUT
 
 
@@ -46,8 +48,9 @@ def check_conditions_recursively(conditions, defined_variables, override_params=
     if keys == ['all']:
         assert len(conditions['all']) >= 1
         for condition in conditions['all']:
+            override_params_copy = copy.deepcopy(override_params)
             conditions_met, params_update = check_conditions_recursively(
-                condition, defined_variables, override_params=override_params
+                condition, defined_variables, override_params=override_params_copy
             )
             override_params.update(params_update)
             if not conditions_met:
@@ -57,8 +60,9 @@ def check_conditions_recursively(conditions, defined_variables, override_params=
     elif keys == ['any']:
         assert len(conditions['any']) >= 1
         for condition in conditions['any']:
+            override_params_copy = copy.deepcopy(override_params)
             conditions_met, params_update = check_conditions_recursively(
-                condition, defined_variables, override_params=override_params
+                condition, defined_variables, override_params=override_params_copy
             )
             override_params.update(params_update)
             if conditions_met:
@@ -138,7 +142,8 @@ def _do_operator_comparison(operator_type, operator_name, comparison_value):
 
     def fallback(*args, **kwargs):
         raise AssertionError("Operator {0} does not exist for type {1}".format(
-            operator_name, operator_type.__class__.__name__))
+            operator_name, operator_type.__class__.__name__)
+        )
 
     method = getattr(operator_type, operator_name, fallback)
     if getattr(method, 'input_type', '') == FIELD_NO_INPUT:
