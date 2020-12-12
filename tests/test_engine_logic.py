@@ -199,14 +199,20 @@ class EngineTests(TestCase):
     def test_do_actions_with_returned_values(self):
         actions = [{'name': 'action1'},
                    {'name': 'action2', 'params': {'param1': 'foo', 'param2': 10}},
-                   {'name': 'action3', 'params': {'param1': 'baz'}}]
+                   {'name': 'action3', 'params': {'param1': 'baz'}},
+                   {'name': 'action4', 'params': {'param1': 'old'}}]
         defined_actions = BaseActions()
         defined_actions.action1 = MagicMock(return_value={'param3': 'bar'})
-        defined_actions.action2 = MagicMock()
-        defined_actions.action3 = MagicMock()
+        defined_actions.action2 = MagicMock(return_value=[1, 2, 3])
+        defined_actions.action3 = MagicMock(return_value={'param1': 'new'})
+        defined_actions.action4 = MagicMock()
 
         engine.do_actions(actions, defined_actions)
 
         defined_actions.action1.assert_called_once_with()
+        # action result of dict type gets merged into params
         defined_actions.action2.assert_called_once_with(param1='foo', param2=10, param3='bar')
+        # action result of non-dict type doesn't get merged into params
         defined_actions.action3.assert_called_once_with(param1='baz')
+        # action result overrides params of the following action
+        defined_actions.action4.assert_called_once_with(param1='new')

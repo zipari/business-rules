@@ -108,7 +108,7 @@ def do_actions(actions, defined_actions):
                                  .format(method_name, defined_actions.__class__.__name__))
 
         params = action.get('params') or {}
-        if returned_values:
+        if returned_values and isinstance(returned_values, dict):
             params = {**params, **returned_values}
         method = getattr(defined_actions, method_name, fallback)
         returned_values = method(**params)
