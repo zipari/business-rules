@@ -14,10 +14,6 @@ marketing logic around when certain customers or items are eligible for a
 discount or to automate emails after users enter a certain state or go through
 a particular sequence of events.
 
-<p align="center">
-    <img src="http://cdn.memegenerator.net/instances/400x/36514579.jpg" />
-</p>
-
 ## Usage
 
 ### 1. Define Your set of variables
@@ -61,6 +57,23 @@ class ProductVariables(BaseVariables):
         return products.related_products
 ```
 
+A variable can return a value of a specific type (`FIELD_TEXT`, `FIELD_NUMERIC`, `FIELD_NO_INPUT`, `FIELD_SELECT`, `FIELD_SELECT_MULTIPLE`, `FIELD_DATE`) as shown above, or a tuple, where the first element of a tuple will again be a variable, and the second element will be a dictionary of actions' parameters overrides. This dictionary will be passed to all of the triggered actions, providing an opportunity to actions to respond in a dynamic manner. Variable type is still co-related to the returned value.
+
+For example:
+
+```python
+class ProductVariables(BaseVariables):
+
+    def __init__(self, products):
+        self.products = products
+
+    @boolean_rule_variable(params={'product_index': FIELD_NUMERIC, 'threshold': FIELD_NUMERIC}
+    def product_inventory_spot_check(self, product_index, threshold):
+        selected_product = self.products[product_index]
+        product_under_threshold = selected_product.current_inventory < threshold
+        return product_under_threshold, {'selected_product': selected_product.name}
+```
+
 ### 2. Define your set of actions
 
 These are the actions that are available to be taken when a condition is triggered.
@@ -74,7 +87,7 @@ class ProductActions(BaseActions):
         self.product = product
 
     @rule_action(params={"sale_percentage": FIELD_NUMERIC})
-    def put_on_sale(self, sale_percentage):
+    def put_on_sale(self, sale_percentage, **kwargs):
         """
         Actions too can have docstrings!
         """
@@ -82,7 +95,7 @@ class ProductActions(BaseActions):
         self.product.save()
 
     @rule_action(params={"number_to_order": FIELD_NUMERIC})
-    def order_more(self, number_to_order):
+    def order_more(self, number_to_order, **kwargs):
         ProductOrder.objects.create(product_id=self.product.id,
                                     quantity=number_to_order)
 ```
@@ -109,10 +122,45 @@ class ProductActions(BaseActions):
             }
         ]
     )
-    def change_stock_state(self, stock_state):
+    def change_stock_state(self, stock_state, **kwargs):
         self.product.stock_state = stock_state
         self.product.save()
 ```
+
+As you might have noticed, for every action defined it is a must to have its signature end with `**kwargs`. This is because, as we explained, variables can send an arbitrary parameters to it.
+
+For example (following `product_inventory_spot_check` variable):
+
+```python
+class ProductActions(BaseActions):
+    ...
+
+    @rule_action()
+    def low_on_product_exception(self, **kwargs):
+        product = kwargs.get('selected_product', '<name not available>')
+        msg = 'Low on product {}!'.format(product)
+        raise Exception(msg)
+```
+
+Additionally, one action can pass parameters overrides to the subsequent ones.
+
+For example:
+
+```python
+class ProductActions(BaseActions):
+    ...
+
+    @rule_action()
+    def some_action(self, **kwargs):
+        return {'foo': 'bar'}
+```
+
+In this case, any action following `some_action` will receive `{'foo': 'bar'}` as a part of its `kwargs`. The requrement is that the action response is of a `dict` type.
+
+The order of precedence of action parameters overrides is (lowest to highest):
+ * action defined parameter
+ * parameter override provided by variable
+ * parameter override provided by action
 
 ### 3. Build the rules
 
@@ -296,16 +344,23 @@ that returns
 
 ### Run your rules
 
+Run all of the defined rules using `run_all` or just a specific one using `run`:
+
 ```python
-from business_rules import run_all
+from business_rules import run, run_all
 
 rules = _some_function_to_receive_from_client()
+first_rule = rules[0]
 
 for product in Products.objects.all():
     run_all(rule_list=rules,
             defined_variables=ProductVariables(product),
             defined_actions=ProductActions(product),
             stop_on_first_trigger=True)
+
+product = Products.objects.first()
+run(first_rule, ProductVariables(product), ProductActions(product))
+
 ```
 
 ## API
