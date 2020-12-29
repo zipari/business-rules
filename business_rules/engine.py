@@ -21,8 +21,11 @@ def run(rule, defined_variables, defined_actions):
     """
     Check if rule condition is met and trigger the actions accordingly
     :param rule: business rule to be checked/executed
+    :type rule: dict
     :param defined_variables: variables/methods that the rule logic consists of
+    :type defined_variables: class:`business_rules.variables.BaseVariables`
     :param defined_actions: actions to be executed if the rule is met
+    :type defined_actions: class:`business_rules.actions.BaseActions`
     :return: boolean - whether the rule was met or not
     """
     conditions, actions = rule['conditions'], rule['actions']
@@ -37,9 +40,13 @@ def check_conditions_recursively(conditions, defined_variables, override_params=
     """
     Recursive check of business rule variables/methods
     :param conditions: (partial) logic of the business rule to be checked
+    :type conditions: dict
     :param defined_variables: variables/methods to be used
+    :type defined_variables: class:`business_rules.variables.BaseVariables`
     :param override_params: overrides for actions' params recursively collected from variables
-    :return: tuple consisting of:
+    :type override_params: dict
+    :return: (boolean, dict)
+        tuple consisting of:
         - boolean value if the rule is triggered, and
         - actions' overrides dict
     """
@@ -82,9 +89,13 @@ def check_condition(condition, defined_variables, override_params=None):
     Checks a single rule condition - the condition will be made up of variables, values and the comparison operator.
     The defined_variables object must have a variable defined for any variables in this condition.
     :param condition: logic segment of the business rule to be checked
+    :type condition: dict
     :param defined_variables: variables/methods to be used
+    :type defined_variables: class:`business_rules.variables.BaseVariables`
     :param override_params: overrides for actions' params recursively collected from variables
-    :return: tuple consisting of:
+    :type override_params: dict
+    :return: (boolean, dict)
+        tuple consisting of:
         - boolean value if the segment is triggered, and
         - partial actions' overrides dict
     """
@@ -103,8 +114,11 @@ def _get_variable_value_and_actions_params(defined_variables, name, params):
     Call the function provided on the defined_variables object with the given name (
     raise exception if that doesn't exist) and casts it to the specified type.
     :param defined_variables: variables/methods to be used
+    :type defined_variables: class:`business_rules.variables.BaseVariables`
     :param name: variable name
+    :type name: str
     :param params: variable params
+    :type params: dict
     :return:
             - an instance of operators.BaseType
             - optional actions' params overrides
@@ -157,8 +171,11 @@ def do_actions(actions, defined_actions, override_params=None):
     """
     Executes defined actions.
     :param actions: actions to be exectuted
+    :type actions: list
     :param defined_actions: scope containing all relevant actions
+    :param defined_actions: class:`business_rules.actions.BaseActions`
     :param override_params: actions' params overrides coming from variables
+    :type override_params: dict
     :return:
     """
     override_params = override_params or {}
